@@ -25,6 +25,17 @@
 SrtExpRet srtexp_init(const char *configFile);
 
 /**
+ * SRT Exporter library initialization, with function parameters.
+ *
+ * @param   IN name: configuration name
+ * @param   IN ip: # ip and port on which http server of srt exporter would be
+ * established an available port between port_min and port_max would be chosen
+ * @param   IN port:  target port to share the metrics
+ * @return  SrtExpRet::SRT_EXP_SUCCESS on success
+*/
+SrtExpRet srtexp_simple_init(const char * name, const char *ip, const int port);
+
+/**
  * SRT Exporter library deinitialization, clear all SRT Exporter objects created, release loaded configuration
  *
  * @param

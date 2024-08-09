@@ -63,6 +63,15 @@ SrtExpRet srtexp_init(const char *configFile) {
     return SrtExpRet::SRT_EXP_SUCCESS;
 }
 
+SrtExpRet srtexp_simple_init(const char * name, const char *ip, const int port)
+{
+    srt_exporter::logger::SrtLog_Notice(__FUNCTION__);
+    srt_exporter::srtExpConfig
+        = std::make_shared<srt_exporter::SrtExpConfig>();
+    srt_exporter::srtExpConfig->addConfig(name, ip, port);
+    return SrtExpRet::SRT_EXP_SUCCESS;
+}
+
 SrtExpRet srtexp_deinit() {
     srt_exporter::logger::SrtLog_Notice(__FUNCTION__);
 

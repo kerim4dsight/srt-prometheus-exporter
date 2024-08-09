@@ -22,6 +22,10 @@ SrtExpCRet srtexp_c_init(const char *configFile) {
     return (SrtExpCRet)srtexp_init(configFile);
 }
 
+SrtExpCRet srtexp_c_custom_init(const char *name, const char *ip, const int port) {
+    return (SrtExpCRet)srtexp_simple_init(name, ip, port);
+}
+
 SrtExpCRet srtexp_c_deinit() {
     return (SrtExpCRet)srtexp_deinit();
 }
