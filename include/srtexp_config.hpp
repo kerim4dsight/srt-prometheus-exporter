@@ -40,7 +40,7 @@ enum class SrtExpFilterMode {
 #define SRT_SOURCE_VARLIST "['pktSentTotal', 'pktSndLossTotal', 'pktSent', 'pktSndLoss', 'pktRetrans', 'pktRecvACK', 'pktRecvNAK', 'byteSent', 'byteRetrans', 'byteSndDrop', 'pktSndDrop', 'mbpsSendRate', 'usSndDuration', 'msSndTsbPdDelay', 'mbpsBandwidth', 'msRTT']"  // NOLINT
 #define SRT_DESTINATION_VARLIST "['pktRecvTotal', 'pktRcvLossTotal', 'pktRecv', 'pktRcvLoss', 'pktRcvRetrans', 'pktSentACK', 'pktSentNAK', 'byteRecv', 'byteRcvDrop', 'pktRcvDrop', 'mbpsRecvRate', 'usSndDuration', 'msSndTsbPdDelay', 'mbpsBandwidth', 'msRTT']"  // NOLINT
 #define SRT_COMMON_VARLIST "['pktSentTotal', 'pktSndLossTotal', 'pktSent', 'pktSndLoss', 'pktRetrans', 'pktRecvACK', 'pktRecvNAK', 'byteSent', 'byteRetrans', 'byteSndDrop', 'pktSndDrop', 'mbpsSendRate', 'pktRecvTotal', 'pktRcvLossTotal', 'pktRecv', 'pktRcvLoss', 'pktRcvRetrans', 'pktSentACK', 'pktSentNAK', 'byteRecv', 'byteRcvDrop', 'pktRcvDrop', 'mbpsRecvRate', 'usSndDuration', 'msSndTsbPdDelay', 'mbpsBandwidth', 'msRTT']"  // NOLINT
-
+#define SRT_ALL_VARLIST "['msTimeStamp', 'pktSentTotal', 'pktRecvTotal', 'pktSndLossTotal', 'pktRcvLossTotal', 'pktRetransTotal', 'pktSentACKTotal', 'pktRecvACKTotal', 'pktSentNAKTotal', 'pktRecvNAKTotal', 'usSndDurationTotal', 'pktSndDropTotal', 'pktRcvDropTotal', 'pktRcvUndecryptTotal', 'byteSentTotal', 'byteRecvTotal', 'byteRcvLossTotal', 'byteRetransTotal', 'byteSndDropTotal', 'byteRcvDropTotal', 'byteRcvUndecryptTotal', 'pktSent', 'pktRecv', 'pktSndLoss', 'pktRcvLoss', 'pktRetrans', 'pktRcvRetrans', 'pktSentACK', 'pktRecvACK', 'pktSentNAK', 'pktRecvNAK', 'mbpsSendRate', 'mbpsRecvRate', 'usSndDuration', 'pktReorderDistance', 'pktRcvAvgBelatedTime', 'pktRcvBelated', 'pktSndDrop', 'pktRcvDrop', 'pktRcvUndecrypt', 'byteSent', 'byteRecv', 'byteRcvLoss', 'byteRetrans', 'byteSndDrop', 'byteRcvDrop', 'byteRcvUndecrypt', 'usPktSndPeriod', 'pktFlowWindow', 'pktCongestionWindow', 'pktFlightSize', 'msRTT', 'mbpsBandwidth', 'byteAvailSndBuf', 'byteAvailRcvBuf', 'mbpsMaxBW', 'byteMSS', 'byteSndBuf', 'msSndBuf', 'msSndTsbPdDelay', 'pktRcvBuf', 'byteRcvBuf', 'msRcvBuf', 'msRcvTsbPdDelay', 'pktSndFilterExtraTotal', 'pktRcvFilterExtraTotal', 'pktRcvFilterSupplyTotal', 'pktRcvFilterLossTotal', 'pktSndFilterExtra', 'pktRcvFilterExtra', 'pktRcvFilterSupply', 'pktRcvFilterLoss']" // NOLINT
 typedef struct _SrtExpLabel {
     std::string name;
     std::string value;
@@ -85,6 +85,10 @@ class SrtExpConfig {
     SrtExpCollectorConfig& GetSrtExpCollectorConfig(
         const std::string& exporterName);
     SrtExpObjConfig *FindSrtExpObjConfig(const std::string& exporterName);
+
+    void addConfig(const std::string& name, const std::string& ip, int port,
+                   const SrtExpCollectorConfig& config = {});
+
     void DumpConfig();
 
  private:
@@ -94,7 +98,7 @@ class SrtExpConfig {
     std::vector<SrtExpObjConfig> _objConfig;
 
     void LoadDefaultConfig(SrtExpGlobalConfig *cfg);
-    void LoadDefaultSrtExpCollectorConfig(SrtExpCollectorConfig *cfg);
+    void LoadDefaultSrtExpCollectorConfig(SrtExpCollectorConfig *cfg, const char *input = SRT_COMMON_VARLIST);
     void LoadSrtExpCollectorConfig(SrtExpCollectorConfig *cfg,
                                    const YAML::Node &config);
     void DumpSrtExpCollectorConfig(const SrtExpCollectorConfig &cfg);

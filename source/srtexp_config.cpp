@@ -148,6 +148,26 @@ SrtExpObjConfig *SrtExpConfig::FindSrtExpObjConfig(
     return nullptr;
 }
 
+void SrtExpConfig::addConfig(const std::string& name, const std::string& ip, int port,
+                   const SrtExpCollectorConfig& config)
+{
+    if (FindSrtExpObjConfig(name) != nullptr) {
+        logger::SrtLog_Debug("Srt Exporter object already exists.");
+        return;
+    }
+    _objConfig.emplace_back(SrtExpObjConfig());
+    _objConfig.back().name = name;
+    _objConfig.back().port = port;
+    _objConfig.back().ip = ip;
+    if (config.varList.empty() && config.labelList.empty()) {
+        LoadDefaultSrtExpCollectorConfig(&(_objConfig.back().config), SRT_ALL_VARLIST);
+        logger::SrtLog_Debug("SrtExpCollectorConfig is empty.");
+    } else {
+        logger::SrtLog_Debug("SrtExpCollectorConfig is not empty.");
+        _objConfig.back().config = config;
+    }
+}
+
 void SrtExpConfig::DumpConfig() {
     logger::SrtLog_Debug(__FUNCTION__);
 
@@ -174,10 +194,10 @@ void SrtExpConfig::LoadDefaultConfig(SrtExpGlobalConfig *cfg) {
 }
 
 void SrtExpConfig::LoadDefaultSrtExpCollectorConfig(
-    SrtExpCollectorConfig *cfg) {
+    SrtExpCollectorConfig *cfg, const char *input) {
     cfg->collectorMode = SrtExpCollectorMode::COLLECT_ON_REQUEST;
     cfg->filterMode = SrtExpFilterMode::SRT_COMMON;
-    YAML::Node temp = YAML::Load(SRT_COMMON_VARLIST);
+    YAML::Node temp = YAML::Load(input);
     cfg->varList.clear();
     for (auto tmp : temp) {
         cfg->varList.push_back(tmp.as<std::string>());
